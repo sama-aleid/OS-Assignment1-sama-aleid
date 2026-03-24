@@ -46,7 +46,47 @@ class Process implements Runnable {
         this.creationTime=System.currentTimeMillis();
         this.waitingTime=0;
     }
+//get
+    public String getName()
+    {
+        return Name;
+    }
+    public int getBrustTime()
+    {
+        return brustTime;
+    }
+     public int getTimeQuantum()
+    {
+        return timeQuantum;
+    }
+     public int getRemainingTime()
+    {
+        return remainingTime;
+    }
+     public int getPriority()
+    {
+        return priority;
+    }
+     public int getCreationTime()
+    {
+        return creationTime;
+    }
+     public int getWaitingTime()
+    {
+        return waitingTime;
+    }
 
+    //set
+
+    public void setRemainingTime(int remainingTime)
+    {
+        this.remainingTime=remainingTime;
+    }
+     public void addWaitingTime(long time)
+    {
+        this.waitingTime += time;
+    }
+    
     // This method will be called when the thread for this process is started
     @Override
     public void run() {

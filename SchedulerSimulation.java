@@ -3,7 +3,7 @@ import java.util.Queue;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Random;
-
+import java.util.ArrayList;
 // ANSI Color Codes for enhanced terminal output
 class Colors {
     public static final String RESET = "\u001B[0m";
@@ -210,7 +210,8 @@ public class SchedulerSimulation {
         
         // Map to associate each thread with its respective process object
         Map<Thread, Process> processMap = new HashMap<>();
-        
+
+        ArrayList<Process> allProcesses = new ArrayList<>();
         // Print simulation header with elegant formatting
         System.out.println("\n" + Colors.BOLD + Colors.BRIGHT_CYAN + 
                           "╔═══════════════════════════════════════════════════════════════════════════════════════╗" + 
@@ -245,7 +246,7 @@ public class SchedulerSimulation {
             int priority =random.nextInt(5) +1;
             // Create a new process object with a unique name, burst time, and the defined time quantum
             Process process = new Process("P" + i, burstTime, timeQuantum, priority);
-            
+            allProcesses.add(process);
             // Add the process to the ready queue and the map
             addProcessToQueue(process, processQueue, processMap);
         }
@@ -309,6 +310,8 @@ public class SchedulerSimulation {
                                       Colors.RESET + Colors.YELLOW + " is the last process → running to completion" + 
                                       Colors.RESET);
                     process.runToCompletion(); // Run until the process completes
+                    long finishTime = System.currentTimeMillis();
+                    process.waitingTime = finishTime - process.creationTime;
                 }
             }
         }
@@ -325,6 +328,11 @@ public class SchedulerSimulation {
                           "╚════════════════════════════════════════════════════════════════════════════════╝" + 
                           Colors.RESET + "\n");
         System.out.println("Total context switches: " + contextSwitches);
+
+        System.out.println("\nProcess\tWaiting Time");
+
+        for(Process p : allProcesses){
+            System.out.println(p.getName() + "\t" + p.waitingTime + " ms");
     }
     
     // Method to add a process to the queue and map, while printing a "ready" message
@@ -342,7 +350,7 @@ public class SchedulerSimulation {
         // Print a message indicating the process has entered the ready queue
         System.out.println(Colors.BLUE + "  ➕ " + Colors.BOLD + Colors.CYAN + process.getName() + 
                           Colors.RESET + Colors.BLUE + " added to ready queue" + Colors.RESET + 
-                           "| Priority: + Colors.MAGENTA + process.priority + Colors.RESET +
+                           "| Priority: "+ Colors.MAGENTA + process.priority + Colors.RESET +
                            Colors.BLUE+
                           " │ Burst time: " + Colors.YELLOW + process.getBurstTime() + "ms" + 
                           Colors.RESET);
